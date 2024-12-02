@@ -1,0 +1,75 @@
+diff --git a/dist/server/index.js b/dist/server/index.js
+index da1496cdc330dacf7cd5c315769e0fa61fc9a89d..a2d6daacda50e261509a84de9ee6fb2e3f4a5db0 100644
+--- a/dist/server/index.js
++++ b/dist/server/index.js
+@@ -294,7 +294,12 @@ class GoogleAIFileManager {
+      * Upload a file.
+      */
+     async uploadFile(filePath, fileMetadata) {
+-        const file = fs.readFileSync(filePath);
++        let file;
++        if (typeof filePath === "string") {
++          file = readFileSync(filePath);
++        } else {
++          file = filePath;
++        }
+         const url = new FilesRequestUrl(RpcTask.UPLOAD, this.apiKey, this._requestOptions);
+         const uploadHeaders = getHeaders(url);
+         const boundary = generateBoundary();
+diff --git a/dist/server/index.mjs b/dist/server/index.mjs
+index 59156232433d8e1d7a478dc8f78768552b6a7517..11bd6c1b0cb0c43854630dff106d32d27afd3587 100644
+--- a/dist/server/index.mjs
++++ b/dist/server/index.mjs
+@@ -292,7 +292,12 @@ class GoogleAIFileManager {
+      * Upload a file.
+      */
+     async uploadFile(filePath, fileMetadata) {
+-        const file = readFileSync(filePath);
++        let file;
++        if (typeof filePath === "string") {
++          file = readFileSync(filePath);
++        } else {
++          file = filePath;
++        }
+         const url = new FilesRequestUrl(RpcTask.UPLOAD, this.apiKey, this._requestOptions);
+         const uploadHeaders = getHeaders(url);
+         const boundary = generateBoundary();
+diff --git a/dist/server/server.d.ts b/dist/server/server.d.ts
+index 7248f341990b5bfe65a22989de253725035cc2fe..166ce2634a21fb7e70affa9b17448fa02d094665 100644
+--- a/dist/server/server.d.ts
++++ b/dist/server/server.d.ts
+@@ -502,7 +502,7 @@ export declare class GoogleAIFileManager {
+     /**
+      * Upload a file.
+      */
+-    uploadFile(filePath: string, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
++    uploadFile(filePath: string | Uint8Array, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
+     /**
+      * List all uploaded files.
+      *
+diff --git a/dist/server/src/server/file-manager.d.ts b/dist/server/src/server/file-manager.d.ts
+index fe4f9b10e44c67c8409f0c5c64645db57ed91b17..76a9e143fcf1decd936bbbccda0c1cb04e6be88d 100644
+--- a/dist/server/src/server/file-manager.d.ts
++++ b/dist/server/src/server/file-manager.d.ts
+@@ -31,7 +31,7 @@ export declare class GoogleAIFileManager {
+     /**
+      * Upload a file.
+      */
+-    uploadFile(filePath: string, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
++    uploadFile(filePath: string | Uint8Array, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
+     /**
+      * List all uploaded files.
+      *
+diff --git a/dist/src/server/file-manager.d.ts b/dist/src/server/file-manager.d.ts
+index fe4f9b10e44c67c8409f0c5c64645db57ed91b17..76a9e143fcf1decd936bbbccda0c1cb04e6be88d 100644
+--- a/dist/src/server/file-manager.d.ts
++++ b/dist/src/server/file-manager.d.ts
+@@ -31,7 +31,7 @@ export declare class GoogleAIFileManager {
+     /**
+      * Upload a file.
+      */
+-    uploadFile(filePath: string, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
++    uploadFile(filePath: string | Uint8Array, fileMetadata: FileMetadata): Promise<UploadFileResponse>;
+     /**
+      * List all uploaded files.
+      *
